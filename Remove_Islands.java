@@ -25,12 +25,36 @@ public class Remove_Islands implements PlugIn {
 	 * @see ij.plugin.PlugIn#run(java.lang.String)
 	 */
 
-	private boolean px_array[][][];
-	private boolean done_array[][][];
+//	private boolean px_array[][][];
+//	private boolean done_array[][][];
+	private boolean px_array[][];
+	private boolean done_array[][];
+
+	private int width;
+	private int height;
+	private int stacks;
+	
 	private long progress;
 	private long total;
 	List<List> islands = new ArrayList<List>();
-	
+
+	// Read or write values in image array
+	public boolean getPxValue(int x, int y, int z){
+		boolean value = px_array[z][(width * y) + x];
+		return value;
+	}
+	public boolean getPxDone(int x, int y, int z){
+		boolean value = done_array[z][(width * y) + x];
+		return value;
+	}
+	public void setPxValue(int x, int y, int z, boolean value){
+		px_array[z][(width * y) + x] = value;
+	}
+	public void setPxDone(int x, int y, int z, boolean value){
+		done_array[z][(width * y) + x] = value;
+	}
+
+	// Recursively search for neighbor voxels
 	public int tailProcess(List<int[]> island, List<int[]> new_island){
 		boolean stop = true;
 		List<int[]> tmp_island = new ArrayList<int[]>();
@@ -43,40 +67,79 @@ public class Remove_Islands implements PlugIn {
 			int tmp[] = {x, y, z};
 			island.add(tmp);
 			
-			if ((x - 1 >= 0) && px_array[x - 1][y][z] && !done_array[x - 1][y][z]){
-				done_array[x - 1][y][z] = true;
+//			if ((x - 1 >= 0) && px_array[x - 1][y][z] && !done_array[x - 1][y][z]){
+//				done_array[x - 1][y][z] = true;
+//				int tmp_px[] = {x - 1, y, z};
+//				tmp_island.add(tmp_px);
+//				stop = false;
+//			}
+//			if ((x + 1 < px_array.length) && px_array[x + 1][y][z] && !done_array[x + 1][y][z]){
+//				done_array[x + 1][y][z] = true;
+//				int tmp_px[] = {x + 1, y, z};
+//				tmp_island.add(tmp_px);
+//				stop = false;
+//			}
+//			
+//			if ((y - 1 >= 0) && px_array[x][y - 1][z] && !done_array[x][y - 1][z]){
+//				done_array[x][y - 1][z] = true;
+//				int tmp_px[] = {x, y - 1, z};
+//				tmp_island.add(tmp_px);
+//				stop = false;
+//			}
+//			if ((y + 1 < px_array[0].length) && px_array[x][y + 1][z] && !done_array[x][y + 1][z]){
+//				done_array[x][y + 1][z] = true;
+//				int tmp_px[] = {x, y + 1, z};
+//				tmp_island.add(tmp_px);
+//				stop = false;
+//			}
+//			
+//			if ((z - 1 >= 0) && px_array[x][y][z - 1] && !done_array[x][y][z - 1]){
+//				done_array[x][y][z - 1] = true;
+//				int tmp_px[] = {x, y, z - 1};
+//				tmp_island.add(tmp_px);
+//				stop = false;
+//			}
+//			if ((z + 1 < px_array[0][0].length) && px_array[x][y][z + 1] && !done_array[x][y][z + 1]){
+//				done_array[x][y][z + 1] = true;
+//				int tmp_px[] = {x, y, z + 1};
+//				tmp_island.add(tmp_px);
+//				stop = false;
+//			}
+
+			if ((x - 1 >= 0) && getPxValue(x - 1, y, z) && !getPxDone(x - 1, y, z)){
+				setPxDone(x - 1, y, z, true);
 				int tmp_px[] = {x - 1, y, z};
 				tmp_island.add(tmp_px);
 				stop = false;
 			}
-			if ((x + 1 < px_array.length) && px_array[x + 1][y][z] && !done_array[x + 1][y][z]){
-				done_array[x + 1][y][z] = true;
+			if ((x + 1 < width) && getPxValue(x + 1, y, z) && !getPxDone(x + 1, y, z)){
+				setPxDone(x + 1, y, z, true);
 				int tmp_px[] = {x + 1, y, z};
 				tmp_island.add(tmp_px);
 				stop = false;
 			}
 			
-			if ((y - 1 >= 0) && px_array[x][y - 1][z] && !done_array[x][y - 1][z]){
-				done_array[x][y - 1][z] = true;
+			if ((y - 1 >= 0) && getPxValue(x, y - 1, z) && !getPxDone(x, y - 1, z)){
+				setPxDone(x, y - 1, z, true);
 				int tmp_px[] = {x, y - 1, z};
 				tmp_island.add(tmp_px);
 				stop = false;
 			}
-			if ((y + 1 < px_array[0].length) && px_array[x][y + 1][z] && !done_array[x][y + 1][z]){
-				done_array[x][y + 1][z] = true;
+			if ((y + 1 < height) && getPxValue(x, y + 1, z) && !getPxDone(x, y + 1, z)){
+				setPxDone(x, y + 1, z, true);
 				int tmp_px[] = {x, y + 1, z};
 				tmp_island.add(tmp_px);
 				stop = false;
 			}
 			
-			if ((z - 1 >= 0) && px_array[x][y][z - 1] && !done_array[x][y][z - 1]){
-				done_array[x][y][z - 1] = true;
+			if ((z - 1 >= 0) && getPxValue(x, y, z - 1) && !getPxDone(x, y, z - 1)){
+				setPxDone(x, y, z - 1, true);
 				int tmp_px[] = {x, y, z - 1};
 				tmp_island.add(tmp_px);
 				stop = false;
 			}
-			if ((z + 1 < px_array[0][0].length) && px_array[x][y][z + 1] && !done_array[x][y][z + 1]){
-				done_array[x][y][z + 1] = true;
+			if ((z + 1 < stacks) && getPxValue(x, y, z + 1) && !getPxDone(x, y, z + 1)){
+				setPxDone(x, y, z + 1, true);
 				int tmp_px[] = {x, y, z + 1};
 				tmp_island.add(tmp_px);
 				stop = false;
@@ -102,17 +165,19 @@ public class Remove_Islands implements PlugIn {
 		
 		ImagePlus imp = IJ.getImage();
 		ImageProcessor ip = imp.getProcessor();
-		int width = ip.getWidth();
-		int height = ip.getHeight();
-		int stacks = imp.getStackSize();
-//		int stacks = 200; // For debug
+		width = ip.getWidth();
+		height = ip.getHeight();
+		stacks = imp.getStackSize();
+//		stacks = 200; // For debug
 
 		long true_count = 0;
 
 		total = (long)stacks;
 
-		px_array = new boolean[width][height][stacks];
-		done_array = new boolean[width][height][stacks];
+//		px_array = new boolean[width][height][stacks];
+//		done_array = new boolean[width][height][stacks];
+		px_array = new boolean[stacks][width * height];
+		done_array = new boolean[stacks][width * height];
 
 		// Make image array
 		progress = 0;
@@ -123,13 +188,16 @@ public class Remove_Islands implements PlugIn {
 				for (int x = 0; x < width; x++){
 					int value = imp.getPixel(x, y)[0];
 					if (value == 0){
-						px_array[x][y][z] = false;
+//						px_array[x][y][z] = false;
+						setPxValue(x, y, z, false);
 					}else{
-						px_array[x][y][z] = true;
+//						px_array[x][y][z] = true;
+						setPxValue(x, y, z, true);
 						true_count += 1;
 					}
 					
-					done_array[x][y][z] = false;
+//					done_array[x][y][z] = false;
+					setPxDone(x, y, z, false);
 				}
 			}
 			progress += 1;
@@ -144,7 +212,8 @@ public class Remove_Islands implements PlugIn {
 		for (int z = 0; z < stacks; z++){
 			for (int y = 0; y < height; y++){
 				for (int x = 0; x < width; x++){
-					if (px_array[x][y][z] && !done_array[x][y][z]){
+//					if (px_array[x][y][z] && !done_array[x][y][z]){
+					if (getPxValue(x, y, z) && !getPxDone(x, y, z)){
 						List<int[]> island = new ArrayList<int[]>();
 						List<int[]> tmp_island = new ArrayList<int[]>();
 						int[] tmp_px = {x, y, z};
@@ -185,10 +254,12 @@ public class Remove_Islands implements PlugIn {
 		progress = 0;
 		total = islands.size();
 		IJ.showProgress((double)progress / total);
+		int removed_islands = 0;
 		for (int i = 0; i < islands.size(); i++){
 			List<int[]> island = islands.get(i);
 			Integer island_size = island.size();
 			if (island_size < threshold){
+				removed_islands += 1;
 				for (int j = 0; j < island.size(); j++){
 					int[] px = island.get(j);
 					imp.setSlice(px[2] + 1);
@@ -199,6 +270,7 @@ public class Remove_Islands implements PlugIn {
 			IJ.showProgress((double)progress / total);
 		}
 		imp.updateAndDraw();
+		IJ.log("Finished. " + (total - removed_islands) + " islands retained.");
 	}
 }
 
