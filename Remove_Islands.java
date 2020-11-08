@@ -66,17 +66,17 @@ public class Remove_Islands implements PlugIn {
 			island.add(tmp);
 
 			for (int x_i = -1; x_i < 2; x_i++){
-				if ((x_i < 0) || (x_i >= width)){
+				if ((x + x_i < 0) || (x + x_i >= width)){
 					continue;
 				} else {
 					for (int y_i = -1; y_i < 2; y_i++){
-						if ((y_i < 0) || (y_i >= height)){
+						if ((y + y_i < 0) || (y + y_i >= height)){
 							continue;
 						} else {
 							for (int z_i = -1; z_i < 2; z_i++){
-								if ((z_i < 0) || (z_i >= stacks)){
+								if ((z + z_i < 0) || (z + z_i >= stacks) || ((x_i == 0) && (y_i == 0) && (z_i == 0)) || (getPxDone(x + x_i, y + y_i, z + z_i))){
 									continue;
-								} else {
+								} else if (getPxValue(x + x_i, y + y_i, z + z_i)) {
 									setPxDone(x + x_i, y + y_i, z + z_i, true);
 									int tmp_px[] = {x + x_i, y + y_i, z + z_i};
 									tmp_island.add(tmp_px);
